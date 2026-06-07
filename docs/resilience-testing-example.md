@@ -176,6 +176,6 @@ Then hit `GET /backend/resource` repeatedly and watch the sequence: healthy → 
 
 ## Next steps
 
-- [Comparison with WireMock and Mountebank](comparison.md)
+- [Comparison with WireMock](comparison.md)
 - [Traction Plan — what we are building next](traction-plan.md)
 - [Scenarios](scenarios.md) — full YAML reference

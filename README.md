@@ -25,7 +25,7 @@ WireMock is great at returning the response you asked for. **FlakyMock is for wh
 
 Run it as a Docker sidecar and pretend to be Stripe, S3, or a legacy API that flakes — then prove your app retried, backed off, or tripped a circuit breaker. No second chaos tool. Any language can hit it over HTTP.
 
-> Not sure if this fits your stack? See [FlakyMock vs WireMock vs Mountebank](docs/comparison.md).
+> Not sure if this fits your stack? See [FlakyMock vs WireMock](docs/comparison.md).
 
 ---
 
@@ -156,7 +156,7 @@ go install github.com/arun0009/flakymock@latest
 | Doc | What you'll find |
 |-----|------------------|
 | [Resilience Testing Example](docs/resilience-testing-example.md) | End-to-end retry demo |
-| [Comparison](docs/comparison.md) | FlakyMock vs WireMock vs Mountebank |
+| [Comparison](docs/comparison.md) | FlakyMock vs WireMock |
 | [Scenarios](docs/scenarios.md) | YAML reference |
 | [API Reference](docs/api_reference.md) | Endpoints |
 | [Configuration](docs/configuration.md) | Environment variables |

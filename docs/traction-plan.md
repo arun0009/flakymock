@@ -199,7 +199,7 @@ Stars follow traffic and proof, not feature count. **One great example beats fiv
 - Multi-tenant DB backend (until file persistence + namespaces prove insufficient)
 - Record/playback from live traffic (WireMock owns this story today)
 - Claiming superiority over WireMock in README (undermines trust)
-- Chasing Mountebank's multi-protocol scope (different product)
+- Multi-protocol mocking scope (TCP, SMTP, etc. — different product)
 
 ---
 
