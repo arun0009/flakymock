@@ -88,7 +88,8 @@ Full walkthrough: **[Resilience Testing Example](docs/resilience-testing-example
 Copy-paste integration test with [testcontainers-go](examples/testcontainers/):
 
 ```bash
-go test -tags=integration ./examples/testcontainers/...
+cd examples/testcontainers
+go test -tags=integration -v .
 ```
 
 Starts FlakyMock from the repo Dockerfile, runs a 503→503→200 scenario, verifies call count, resets state.
