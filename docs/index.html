@@ -280,7 +280,7 @@
             <ul class="nav-links">
                 <li><a href="/web-ws" target="_blank">WebSocket Tester ↗</a></li>
                 <li><a href="/web-sse" target="_blank">SSE Tester ↗</a></li>
-                <li><a href="/info" target="_blank">Server Info ↗</a></li>
+                <li><a href="/health" target="_blank">Health Check ↗</a></li>
             </ul>
         </div>
         <div
@@ -338,10 +338,9 @@
             }
         }
 
-        // Load Quickstart by default
         document.addEventListener('DOMContentLoaded', () => {
             const firstLink = document.querySelector('.nav-links a');
-            loadDoc('quickstart.md', firstLink);
+            loadDoc('resilience-testing-example.md', firstLink);
 
             // Hide Interactive Tools on GitHub Pages (static hosting)
             if (window.location.hostname.includes('github.io')) {

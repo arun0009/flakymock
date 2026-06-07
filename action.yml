@@ -6,16 +6,17 @@ inputs:
     required: false
     default: '8080'
   scenarios:
-    description: 'Path to scenarios.yaml file'
+    description: 'Path to scenarios.yaml (copied to ./scenarios.yaml before start)'
     required: false
+    default: ''
 runs:
   using: "composite"
   steps:
     - name: Set up Go
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@v5
       with:
-        go-version: '1.21'
-    
+        go-version: '1.26'
+
     - name: Install FlakyMock
       shell: bash
       run: go install github.com/arun0009/flakymock@latest
@@ -23,6 +24,18 @@ runs:
     - name: Start Server
       shell: bash
       run: |
+        if [ -n "${{ inputs.scenarios }}" ] && [ -f "${{ inputs.scenarios }}" ]; then
+          cp "${{ inputs.scenarios }}" scenarios.yaml
+        fi
+        export PORT=${{ inputs.port }}
         nohup flakymock > flakymock.log 2>&1 &
-        echo "FlakyMock started on port ${{ inputs.port }}"
-        sleep 2
+        for i in $(seq 1 30); do
+          if curl -sf "http://localhost:${PORT}/health" > /dev/null; then
+            echo "FlakyMock ready on port ${PORT}"
+            exit 0
+          fi
+          sleep 1
+        done
+        echo "FlakyMock failed to start"
+        cat flakymock.log
+        exit 1

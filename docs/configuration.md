@@ -1,9 +1,3 @@
-<div align="center">
-  <img src="flakymock.png" alt="FlakyMock Mascot" width="120"/>
-</div>
-
-
-
 # Configuration
 
 `flakymock` can be configured via `scenarios.yaml` for fault injection and environment variables for server settings.
@@ -13,27 +7,20 @@
 | Variable | Description | Default |
 | :--- | :--- | :--- |
 | `PORT` | Server port | `8080` |
+| `ENABLE_TLS` | Enable HTTPS | `false` |
+| `CERT_FILE` | TLS certificate path | `cert.pem` |
+| `KEY_FILE` | TLS key path | `key.pem` |
+| `ENABLE_CORS` | Enable CORS for all origins | `true` |
 | `LOG_REQUESTS` | Log each request to stdout | `true` |
 | `LOG_HEADERS` | Log request headers | `false` |
 | `LOG_BODY` | Log request body | `true` |
-| `ENABLE_CORS` | Enable CORS for all origins | `true` |
-| `RATE_LIMIT_RPS` | Requests per second limit | `0` (unlimited) |
-| `HISTORY_SIZE` | Number of requests to keep in history | `100` |
 | `MAX_BODY_SIZE` | Max request body size in bytes | `1048576` (1MB) |
+| `RATE_LIMIT_RPS` | Requests per second limit (`0` = unlimited) | `0` |
+| `HISTORY_SIZE` | Number of requests to keep in history | `100` |
 | `ECHO_DELAY` | Global delay for all echo requests (e.g. `100ms`) | `0` |
-| `ECHO_CHAOS_PROBABILITY` | Probability (0.0-1.0) of random 500 errors | `0.0` |
-| `ENABLE_TLS` | `false` | Enable HTTPS support. |
-| `CERT_FILE` | `cert.pem` | Path to the TLS certificate file. |
-| `KEY_FILE` | `key.pem` | Path to the TLS key file. |
-| `ENABLE_CORS` | `true` | Enable Cross-Origin Resource Sharing. |
-| `LOG_REQUESTS` | `true` | Log incoming requests to stdout. |
-| `LOG_BODY` | `true` | Log request bodies. |
-| `MAX_BODY_SIZE` | `1048576` | Maximum request body size in bytes (default 1MB). |
-| `HOSTNAME` | `localhost` | Hostname to use in responses. |
-| `RATE_LIMIT_PER_S` | `0.0` | Global rate limit (requests per second). 0 means disabled. |
-| `HISTORY_SIZE` | `100` | Number of recent requests to keep in memory. |
-| `SCENARIO_ROOT_DIR` | `.` | Root directory for file persistence. Scenarios load from `mappings/` on startup; use `POST /api/control/persist-scenarios` to save. |
+| `ECHO_CHAOS_PROBABILITY` | Probability (0.0–1.0) of random 500 errors | `0.0` |
+| `SCENARIO_ROOT_DIR` | Root for file persistence; loads `mappings/` on startup | `.` |
 
 ## Scenario Configuration (YAML)
 
-Define multi-step response sequences in `scenarios.yaml`. See [Scenario Configuration](scenarios.md) for full details.
+Define multi-step response sequences in `scenarios.yaml`. See [Scenarios](scenarios.md) for full details.

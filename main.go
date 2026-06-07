@@ -30,11 +30,7 @@ func main() {
 	// 4. Create and Start Server
 	router := server.NewRouter(cfg)
 
-	// Use the router built by the server package
 	http.Handle("/", router)
-
-	// Handle HTTP/2 Cleartext (h2c) for compatibility
-	// Note: The mixed router logic from the old main.go is now handled inside pkg/server/server.go's Run function
 
 	log.Printf("Server starting on port %s (TLS: %t, CORS: %t)", cfg.Port, cfg.EnableTLS, cfg.EnableCORS)
 

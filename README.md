@@ -102,7 +102,7 @@ Mount a file and go — pre-built scenarios in `recipes/`:
 ```bash
 # Slow / flaky storage
 docker run -p 8080:8080 \
-  -v $(pwd)/recipes/aws-s3-slow.yaml:/app/scenarios.yaml \
+  -v $(pwd)/recipes/aws-s3-slow.yaml:/scenarios.yaml \
   arun0009/flakymock:latest
 
 # Circuit breaker: healthy → spike → recovery

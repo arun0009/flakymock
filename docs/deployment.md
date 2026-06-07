@@ -1,38 +1,20 @@
-<div align="center">
-  <img src="flakymock.png" alt="FlakyMock Mascot" width="120"/>
-</div>
-
-
-
 # Deployment
 
-## Local Development
-
-Prerequisites: Go 1.16+
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/arun0009/flakymock.git
-   cd flakymock
-   ```
-
-2. Run the server:
-   ```bash
-   go run main.go
-   ```
-
-3. The server will start on port 8080 (default).
-
 ## Docker
-You can run the server directly using Docker.
 
 ```bash
 docker run -p 8080:8080 arun0009/flakymock:latest
 ```
 
-### Environment Variables
+Mount a scenario file:
 
-Pass configuration via `-e` flags:
+```bash
+docker run -p 8080:8080 \
+  -v $(pwd)/recipes/aws-s3-slow.yaml:/scenarios.yaml \
+  arun0009/flakymock:latest
+```
+
+### Environment Variables
 
 ```bash
 docker run -p 8080:8080 \
@@ -41,47 +23,42 @@ docker run -p 8080:8080 \
   arun0009/flakymock:latest
 ```
 
+See [Configuration](configuration.md) for all options.
+
 ## Docker Compose
 
-For complex setups or to mount a `scenarios.yaml` file, use the included `docker-compose.yaml`.
-
 ```bash
-docker-compose up
+docker compose up
 ```
 
-## TLS (HTTPS) Support
+## Local Development
 
-To enable HTTPS, set `ENABLE_TLS=true` and provide the path to your certificate and key files.
+Requires Go 1.26+.
 
 ```bash
-# Generate self-signed certs
+git clone https://github.com/arun0009/flakymock.git
+cd flakymock
+go run main.go
+```
+
+## TLS (HTTPS)
+
+```bash
 openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes -subj '/CN=localhost'
 
-# Run with TLS
 export ENABLE_TLS=true
 export CERT_FILE=./cert.pem
 export KEY_FILE=./key.pem
-./flakymock
+go run main.go
 ```
 
-The server will listen on the configured `PORT` (default 8080) using HTTPS.
-
-## CI/CD Integration
-This project includes a GitHub Action that allows you to easily spin up the mock server in your CI pipelines.
-
-### GitHub Actions
-Add the following step to your workflow:
+## GitHub Actions
 
 ```yaml
-- name: Start Resilience Mock
-  uses: arun0009/flakymock@main
+- uses: arun0009/flakymock@v0.1.0
   with:
     port: 8080
     scenarios: ./tests/scenarios.yaml
 ```
 
-The server will start in the background, allowing you to run your integration tests against it.
-
-## Kubernetes
-
-(Coming Soon)
+The action installs FlakyMock, copies your scenario file, waits for `/health`, then leaves the server running for integration tests.

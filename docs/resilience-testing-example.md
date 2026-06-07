@@ -143,7 +143,7 @@ Run with the recipe mounted:
 
 ```bash
 docker run -p 8080:8080 \
-  -v $(pwd)/retry-scenario.yaml:/app/scenarios.yaml \
+  -v $(pwd)/retry-scenario.yaml:/scenarios.yaml \
   arun0009/flakymock:latest
 ```
 
@@ -155,7 +155,7 @@ Use the built-in recipe:
 
 ```bash
 docker run -p 8080:8080 \
-  -v $(pwd)/recipes/generic-circuit-breaker.yaml:/app/scenarios.yaml \
+  -v $(pwd)/recipes/generic-circuit-breaker.yaml:/scenarios.yaml \
   arun0009/flakymock:latest
 ```
 
@@ -163,19 +163,8 @@ Then hit `GET /backend/resource` repeatedly and watch the sequence: healthy → 
 
 ---
 
-## Why this beats "just mocking"
-
-| Plain mock | FlakyMock |
-|------------|-------------------|
-| Always returns 200 | Returns a **sequence** of failures then success |
-| Static response | **Probability**, **delay jitter**, **circuit breaker** built in |
-| Separate chaos tool needed | **One server** for stub + fault injection |
-| Hard to test retries | **Designed** for retry / timeout / CB tests |
-
----
-
 ## Next steps
 
 - [Comparison with WireMock](comparison.md)
-- [Traction Plan — what we are building next](traction-plan.md)
 - [Scenarios](scenarios.md) — full YAML reference
+- [API Reference](api_reference.md) — verify and reset endpoints
