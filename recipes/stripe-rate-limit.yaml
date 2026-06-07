@@ -1,0 +1,22 @@
+# recipes/stripe-rate-limit.yaml
+# Simulates an API that enforces rate limits strictly
+- path: /v1/charges
+  method: POST
+  responses:
+    # 1. Success for the first 5 calls
+    - status: 200
+      delay: 100ms
+      body: '{"id": "ch_123", "amount": 2000, "currency": "usd", "status": "succeeded"}'
+      
+    # 2. Rate Limit (429) after enough traffic
+    # Note: In a real scenario, you'd use the built-in global rate limiter, 
+    # but this scenario forces a 429 deterministically for testing error handling logic.
+    - status: 429
+      probability: 0.2
+      headers:
+        Retry-After: "10"
+      body: '{"error": {"type": "invalid_request_error", "code": "rate_limit", "message": "Too many requests"}}'
+
+    # 3. Default Success
+    - status: 200
+      body: '{"id": "ch_123", "amount": 2000, "currency": "usd", "status": "succeeded"}'

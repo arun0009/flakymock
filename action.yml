@@ -1,0 +1,28 @@
+name: 'FlakyMock'
+description: 'Run the FlakyMock server in your workflow'
+inputs:
+  port:
+    description: 'Port to run the server on'
+    required: false
+    default: '8080'
+  scenarios:
+    description: 'Path to scenarios.yaml file'
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.21'
+    
+    - name: Install FlakyMock
+      shell: bash
+      run: go install github.com/arun0009/flakymock@latest
+
+    - name: Start Server
+      shell: bash
+      run: |
+        nohup flakymock > flakymock.log 2>&1 &
+        echo "FlakyMock started on port ${{ inputs.port }}"
+        sleep 2

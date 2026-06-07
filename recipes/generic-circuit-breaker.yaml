@@ -1,0 +1,25 @@
+# recipes/generic-circuit-breaker.yaml
+# Test your application's Circuit Breaker logic
+# Sequence: OK -> FAIL -> FAIL -> FAIL -> OK (Recovery)
+- path: /backend/resource
+  method: GET
+  responses:
+    # 1. Healthy
+    - status: 200
+      body: '{"status": "healthy"}'
+
+    # 2. Failure Spike (Trips CB)
+    - status: 503
+      delay: 1s # Also slow
+      body: '{"error": "overloaded"}'
+
+    - status: 503
+      body: '{"error": "overloaded"}'
+      
+    - status: 503
+      body: '{"error": "overloaded"}'
+
+    # 3. Recovery (Probe)
+    - status: 200
+      delay: 50ms
+      body: '{"status": "recovered"}'

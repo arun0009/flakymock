@@ -1,0 +1,19 @@
+# recipes/aws-s3-slow.yaml
+# Simulates a flaking S3 bucket or high-latency region
+- path: /my-bucket/{key}
+  method: GET
+  responses:
+    # 1. High Latency (Slow GET)
+    - status: 200
+      delay: 2s
+      probability: 0.3 # 30% of requests are slow
+      body: '{"data": "content"}'
+      
+    # 2. Internal Error (Amazon S3 500)
+    - status: 500
+      probability: 0.1 # 10% fail completely
+      body: '{"code": "InternalError", "message": "We encountered an internal error. Please try again."}'
+
+    # 3. Default Success
+    - status: 200
+      body: '{"data": "content"}'
