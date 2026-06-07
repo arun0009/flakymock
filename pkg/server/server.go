@@ -21,9 +21,6 @@ import (
 	"github.com/arun0009/flakymock/pkg/health"
 	"github.com/arun0009/flakymock/pkg/observability"
 	"github.com/gorilla/mux"
-
-	"golang.org/x/net/http2"
-	"golang.org/x/net/http2/h2c"
 )
 
 type contextKey string
@@ -364,16 +361,24 @@ func matchPath(template, path string) (map[string]string, bool) {
 	return vars, true
 }
 
-// Run starts the HTTP server.
-func Run(cfg config.Config) error {
-	printBanner(cfg)
+func newHTTPServer(cfg config.Config) *http.Server {
 	server := &http.Server{
 		Addr:         ":" + cfg.Port,
-		Handler:      h2c.NewHandler(NewRouter(cfg), &http2.Server{}),
+		Handler:      NewRouter(cfg),
 		ReadTimeout:  30 * time.Second,
 		WriteTimeout: 0,
 		IdleTimeout:  0,
 	}
+	server.Protocols = new(http.Protocols)
+	server.Protocols.SetHTTP1(true)
+	server.Protocols.SetUnencryptedHTTP2(true)
+	return server
+}
+
+// Run starts the HTTP server.
+func Run(cfg config.Config) error {
+	printBanner(cfg)
+	server := newHTTPServer(cfg)
 	log.Printf("Starting HTTP server on port %s", cfg.Port)
 	return server.ListenAndServe()
 }
@@ -381,14 +386,7 @@ func Run(cfg config.Config) error {
 // RunTLS starts the HTTPS server.
 func RunTLS(cfg config.Config) error {
 	printBanner(cfg)
-	server := &http.Server{
-		Addr:         ":" + cfg.Port,
-		Handler:      h2c.NewHandler(NewRouter(cfg), &http2.Server{}),
-		ReadTimeout:  30 * time.Second,
-		WriteTimeout: 0,
-		IdleTimeout:  0,
-	}
-
+	server := newHTTPServer(cfg)
 	log.Printf("Starting HTTPS server on port %s", cfg.Port)
 	return server.ListenAndServeTLS(cfg.CertFile, cfg.KeyFile)
 }
@@ -632,8 +630,8 @@ func handleResetScenarios(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(w).Encode(map[string]interface{}{
-		"reset": reset,
-		"path":  path,
+		"reset":  reset,
+		"path":   path,
 		"method": method,
 	})
 }

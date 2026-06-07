@@ -76,7 +76,7 @@ func TestDynamicPathParameters_Reproduction(t *testing.T) {
 	client := &http.Client{}
 	resp, err = client.Do(req)
 	require.NoError(t, err)
-	defer resp.Body.Close()
+	_ = resp.Body.Close()
 
 	// 3. Assert
 	assert.Equal(t, 200, resp.StatusCode, "Expected 200 OK for dynamic path match")
@@ -109,10 +109,9 @@ func TestVerifyRequests(t *testing.T) {
 
 	verifyResp, err := http.Get(ts.URL + "/api/verify/requests?path=/retry&method=GET&min=2")
 	require.NoError(t, err)
-	defer verifyResp.Body.Close()
-
 	var result map[string]interface{}
 	require.NoError(t, json.NewDecoder(verifyResp.Body).Decode(&result))
+	_ = verifyResp.Body.Close()
 	assert.Equal(t, float64(2), result["count"])
 	assert.Equal(t, true, result["matched"])
 }
@@ -146,8 +145,8 @@ func TestResetScenarios(t *testing.T) {
 
 	resetResp, err := http.Post(ts.URL+"/api/control/reset-scenarios?path=/reset-me&method=GET", "application/json", nil)
 	require.NoError(t, err)
-	defer resetResp.Body.Close()
 	assert.Equal(t, 200, resetResp.StatusCode)
+	_ = resetResp.Body.Close()
 
 	again, err := http.Get(ts.URL + "/reset-me")
 	require.NoError(t, err)
@@ -237,10 +236,9 @@ func TestVerifyRequestsRich(t *testing.T) {
 	verifyURL := ts.URL + "/api/verify/requests?path=/echo&method=POST&body_contains=retry&header=X-Retry:1&min=1"
 	verifyResp, err := http.Get(verifyURL)
 	require.NoError(t, err)
-	defer verifyResp.Body.Close()
-
 	var result config.VerifyResult
 	require.NoError(t, json.NewDecoder(verifyResp.Body).Decode(&result))
+	_ = verifyResp.Body.Close()
 	assert.True(t, result.Matched)
 	assert.GreaterOrEqual(t, result.Count, 1)
 }

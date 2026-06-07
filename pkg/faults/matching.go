@@ -55,10 +55,7 @@ func matchesRequest(s *config.Scenario, r *http.Request) bool {
 		if len(cleanExpected) > 2 && cleanExpected[0] == '/' && cleanExpected[len(cleanExpected)-1] == '/' {
 			pattern := cleanExpected[1 : len(cleanExpected)-1]
 			matched, _ := regexp.MatchString(pattern, string(bodyBytes))
-			if !matched {
-				return false
-			}
-			return true
+			return matched
 		}
 
 		// 3b. Smart JSON Match

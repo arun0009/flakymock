@@ -81,7 +81,7 @@ func TestComplexResiliency(t *testing.T) {
 				start := time.Now()
 				resp, err := client.Get(ts.URL + "/api/resiliency/delay-jitter")
 				if err == nil {
-					resp.Body.Close()
+					_ = resp.Body.Close()
 				}
 				latencies[idx] = time.Since(start)
 			}(i)
@@ -108,7 +108,7 @@ func TestComplexResiliency(t *testing.T) {
 				if resp.StatusCode == 500 {
 					failures++
 				}
-				resp.Body.Close()
+				_ = resp.Body.Close()
 			}
 		}
 
@@ -126,7 +126,7 @@ func TestComplexResiliency(t *testing.T) {
 			resp, _ := client.Get(ts.URL + "/api/resiliency/circuit-breaker")
 			if resp != nil {
 				assert.Equal(t, 500, resp.StatusCode)
-				resp.Body.Close()
+				_ = resp.Body.Close()
 			}
 		}
 
@@ -134,7 +134,7 @@ func TestComplexResiliency(t *testing.T) {
 		resp, err := client.Get(ts.URL + "/api/resiliency/circuit-breaker")
 		require.NoError(t, err)
 		assert.Equal(t, 503, resp.StatusCode, "Circuit breaker should be open")
-		resp.Body.Close()
+		_ = resp.Body.Close()
 
 		// 3. Wait for Timeout (2s defined in yaml)
 		time.Sleep(2100 * time.Millisecond)
@@ -146,7 +146,7 @@ func TestComplexResiliency(t *testing.T) {
 		resp, err = client.Get(ts.URL + "/api/resiliency/circuit-breaker")
 		require.NoError(t, err)
 		assert.Equal(t, 500, resp.StatusCode, "Should allow request in Half-Open")
-		resp.Body.Close()
+		_ = resp.Body.Close()
 	})
 
 	// 6. Load Test (Concurrent Access to Dynamic Scenarios)
@@ -164,12 +164,12 @@ func TestComplexResiliency(t *testing.T) {
 					if j%2 == 0 {
 						resp, err := client.Get(ts.URL + "/api/dynamic/delay")
 						if err == nil {
-							resp.Body.Close()
+							_ = resp.Body.Close()
 						}
 					} else {
 						resp, err := client.Post(ts.URL+"/api/dynamic/chaos", "application/json", nil)
 						if err == nil {
-							resp.Body.Close()
+							_ = resp.Body.Close()
 						}
 					}
 				}

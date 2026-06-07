@@ -14,12 +14,12 @@ func TestVerifyRequestsIntervalAndBody(t *testing.T) {
 		{
 			ID: "1", Timestamp: time.Now(), Method: "POST", Path: "/pay",
 			StatusCode: 503, BodySnippet: `{"retry":true}`,
-			Headers:    http.Header{"X-Retry": []string{"1"}},
+			Headers: http.Header{"X-Retry": []string{"1"}},
 		},
 		{
 			ID: "2", Timestamp: time.Now().Add(150 * time.Millisecond), Method: "POST", Path: "/pay",
 			StatusCode: 200, BodySnippet: `{"retry":true}`,
-			Headers:    http.Header{"X-Retry": []string{"2"}},
+			Headers: http.Header{"X-Retry": []string{"2"}},
 		},
 	}
 	HistoryMutex.Unlock()

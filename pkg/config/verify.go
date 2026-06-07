@@ -93,13 +93,7 @@ func VerifyRequests(f VerifyFilter, minCount, maxCount int, minInterval time.Dur
 	records := FindMatchingRequests(f)
 	count := len(records)
 
-	matched := true
-	if minCount > 0 && count < minCount {
-		matched = false
-	}
-	if maxCount > 0 && count > maxCount {
-		matched = false
-	}
+	matched := (minCount <= 0 || count >= minCount) && (maxCount <= 0 || count <= maxCount)
 
 	result := VerifyResult{
 		Count:   count,

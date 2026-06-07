@@ -512,7 +512,7 @@ func TestConcurrency_RaceConditions(t *testing.T) {
 	resp, err := http.Get(ts.URL + "/health")
 	require.NoError(t, err)
 	assert.Equal(t, 200, resp.StatusCode)
-	resp.Body.Close()
+	_ = resp.Body.Close()
 }
 
 func TestVerification_EchoAndHistory(t *testing.T) {
@@ -534,9 +534,9 @@ func TestVerification_EchoAndHistory(t *testing.T) {
 
 		resp, err := http.DefaultClient.Do(req)
 		require.NoError(t, err)
-		defer resp.Body.Close()
 
 		bodyBytes, _ := io.ReadAll(resp.Body)
+		_ = resp.Body.Close()
 
 		// Use JSONEq as requested to ensure semantic equality without being overly strict on bytes
 		assert.JSONEq(t, reqBody, string(bodyBytes), "Echo body should match JSON semantically")
@@ -556,10 +556,10 @@ func TestVerification_EchoAndHistory(t *testing.T) {
 		// Check history
 		resp, err := http.Get(ts.URL + "/history")
 		require.NoError(t, err)
-		defer resp.Body.Close()
 
 		var history []map[string]interface{}
 		err = json.NewDecoder(resp.Body).Decode(&history)
+		_ = resp.Body.Close()
 		require.NoError(t, err)
 
 		require.NotEmpty(t, history)
@@ -581,10 +581,10 @@ func TestVerification_EchoAndHistory(t *testing.T) {
 
 		resp, err := http.Get(ts.URL + "/history")
 		require.NoError(t, err)
-		defer resp.Body.Close()
 
 		var history []map[string]interface{}
 		_ = json.NewDecoder(resp.Body).Decode(&history)
+		_ = resp.Body.Close()
 		lastEntry := history[len(history)-1]
 
 		body := lastEntry["body"]
